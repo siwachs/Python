@@ -1,3 +1,4 @@
+# 4)Scrape multiple pages of a target website while avoiding IP blocks by implementing a proxy rotation mechanism.
 import requests
 import random
 from itertools import cycle

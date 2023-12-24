@@ -1,0 +1,1 @@
+Create a script that extracts the discount price after adding it to the cart  from the dynamically loading website. (e.g., through AJAX calls or other asynchronous methods or automation methods)

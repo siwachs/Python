@@ -1,3 +1,4 @@
+# 2)Scrape the Magicpin website section to extract the food menu and price details.
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from bs4 import BeautifulSoup
@@ -77,51 +78,51 @@ def get_menu_data(menu, article):
         print(f"Error: {e}")
 
 
-try:
-    # Set up the browser
-    driver = webdriver.Firefox()
-    url = 'https://magicpin.in/New-Delhi/Paharganj/Restaurant/Eatfit/store/61a193/delivery'
-    driver.get(url)
+if __name__ == "__main__":
+    try:
+        # Set up the browser
+        driver = webdriver.Firefox()
+        url = 'https://magicpin.in/New-Delhi/Paharganj/Restaurant/Eatfit/store/61a193/delivery'
+        driver.get(url)
 
-    # Allow some time for the page to load dynamically
-    time.sleep(1)  # Adjust the sleep duration based on the page load time
+        # Allow some time for the page to load dynamically
+        time.sleep(1)  # Adjust the sleep duration based on the page load time
 
-    # Find and store all arrow-down icons in a list
-    arrow_down_icons = driver.find_elements(By.CLASS_NAME, 'minimiseIcon')
-    expanded_page_sources = []
-    for arrow_down in arrow_down_icons:
-        arrow_down.click()
-        time.sleep(1)
+        # Find and store all arrow-down icons in a list
+        arrow_down_icons = driver.find_elements(By.CLASS_NAME, 'minimiseIcon')
+        expanded_page_sources = []
+        for arrow_down in arrow_down_icons:
+            arrow_down.click()
+            time.sleep(1)
 
-    # Get the page source after dynamic content is loaded
-    page_source = driver.page_source
+        # Get the page source after dynamic content is loaded
+        page_source = driver.page_source
 
-    # Quit the Selenium driver as we have obtained the required page source
-    driver.quit()
+        # Quit the Selenium driver as we have obtained the required page source
+        driver.quit()
 
-    # Parse the HTML content using BeautifulSoup
-    soup = BeautifulSoup(page_source, 'html.parser')
+        # Parse the HTML content using BeautifulSoup
+        soup = BeautifulSoup(page_source, 'html.parser')
 
-    # Extract the menu information
-    menu = {}
-    catalog = soup.find('div', class_='catalogItemsHolder')
-    articles = catalog.find_all('article')
+        # Extract the menu information
+        menu = {}
+        catalog = soup.find('div', class_='catalogItemsHolder')
+        articles = catalog.find_all('article')
 
-    for article in articles:
-        try:
-            get_menu_data(menu, article)
+        for article in articles:
+            try:
+                get_menu_data(menu, article)
 
-        except Exception as e:
-            print(f"Error inside article loop: {e}")
+            except Exception as e:
+                print(f"Error inside article loop: {e}")
 
-    # Print the menu
-    print("Menu:")
-    for category, items in menu.items():
-        print(f"\n{category}:")
-        for item in items:
-            for item_name, item_price in item.items():
-                print(f"{item_name}: {item_price}")
+        # Print the menu
+        print("Menu:")
+        for category, items in menu.items():
+            print(f"\n{category}:")
+            for item in items:
+                for item_name, item_price in item.items():
+                    print(f"{item_name}: {item_price}")
 
-
-except Exception as e:
-    print(f"Error outside article loop: {e}")
+    except Exception as e:
+        print(f"Error outside article loop: {e}")
