@@ -30,5 +30,5 @@ def fix_and_load_excel(file_path, sheet_name):
 
 
 if __name__ == "__main__":
-    file_path = r'E:\Projects\Python\Delete Sheet\1.xlsx'
+    file_path = r'E:\Projects\Python\Delete Sheet\1.xls'
     fix_and_load_excel(file_path, "Evaluation Warning")
