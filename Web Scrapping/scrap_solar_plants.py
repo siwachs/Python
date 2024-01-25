@@ -1,6 +1,8 @@
 import requests
 import pandas as pd
 from bs4 import BeautifulSoup
+import time
+from fake_useragent import UserAgent
 
 
 def get_next_page_url(soup, current_page_url):
@@ -13,32 +15,21 @@ def get_next_page_url(soup, current_page_url):
     return None
 
 
-# Your login details
-login_payload = {
-    'username': 'DukeHjsa',
-    'password': 'passwdAC@123',
-}
+# Initialize UserAgent to mock a device and web browser.
+ua = UserAgent()
 
 # Create a session
 session = requests.Session()
-
-# Login
-login_url = 'https://www.gem.wiki/w/index.php?title=Special:UserLogin&action=submitlogin&type=login&returnto=Category:Solar_farms_in_India'
-login_response = session.post(login_url, data=login_payload)
-
-# Check if login was successful
-if 'Incorrect value entered' in login_response.text:
-    print('Login failed.')
-else:
-    print('Login successful.')
-
 base_url = "https://www.gem.wiki"
-page_url = "/w/index.php?title=Category:Solar_farms_in_India&pageuntil=Gale+%28UPC%29+solar+farm#mw-pages"
+page_url = "/w/index.php?title=Category:Solar_farms_in_India&pagefrom=Rajkot+3+hybrid+solar+farm#mw-pages"
 plant_data = []
 
 try:
     while page_url:
         print(page_url)
+        time.sleep(3)
+        headers = {'User-Agent': ua.random}
+        session.headers.update(headers)
         response = session.get(base_url + page_url)
 
         if response.status_code == 200:
