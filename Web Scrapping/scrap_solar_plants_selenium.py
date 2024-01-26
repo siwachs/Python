@@ -6,26 +6,6 @@ from bs4 import BeautifulSoup
 import pandas as pd
 import time
 
-# Function to wait for an element to be present on the page
-
-
-def wait_for_element(driver, by, value, timeout=10):
-    return WebDriverWait(driver, timeout).until(
-        EC.presence_of_element_located((by, value))
-    )
-
-
-def get_next_page_url(driver, current_page_url):
-    next_page_link = wait_for_element(
-        driver, By.PARTIAL_LINK_TEXT, 'next page')
-    next_page_url = next_page_link.get_attribute('href')
-
-    if 'pagefrom' in next_page_url and next_page_url != current_page_url:
-        return next_page_url
-    else:
-        return None
-
-
 # URL and web driver setup
 base_url = "https://www.gem.wiki"
 page_url = "/w/index.php?title=Category:Solar_farms_in_India&pageuntil=Gale+%28UPC%29+solar+farm#mw-pages"
@@ -38,12 +18,21 @@ driver = webdriver.Firefox(options=options)
 plant_data = []
 
 try:
+    def get_next_page_url(soup, current_page_url):
+        links = soup.find_all('a', href=True)
+        for link in links:
+            if 'pagefrom' in link['href']:
+                next_page_url = link['href']
+                if next_page_url != current_page_url:
+                    return next_page_url
+        return None
+
     while page_url:
-        print(page_url)
+        print(base_url+page_url)
 
         # Open the page
         driver.get(base_url+page_url)
-        time.sleep(5)
+        time.sleep(3)
 
         # Extract data using BeautifulSoup
         soup = BeautifulSoup(driver.page_source, "html.parser")
@@ -82,7 +71,8 @@ try:
 
         # Get the next page URL
         driver.get(base_url+page_url)
-        page_url = get_next_page_url(driver, page_url)
+        time.sleep(3)
+        page_url = get_next_page_url(soup, page_url)
 
 except Exception as e:
     print(e)
